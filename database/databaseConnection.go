@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/VILJkid/golang-jwt-project/helpers"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -18,12 +19,12 @@ func DbInstance() *gorm.DB {
 		log.Fatal("Error loading .env file", err)
 	}
 
-	dbUsername := os.Getenv("DB_USERNAME")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbProtocol := os.Getenv("DB_PROTOCOL")
-	dbName := os.Getenv("DB_NAME")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
+	dbUsername := os.Getenv(helpers.DB_USERNAME)
+	dbPassword := os.Getenv(helpers.DB_PASSWORD)
+	dbProtocol := os.Getenv(helpers.DB_PROTOCOL)
+	dbName := os.Getenv(helpers.DB_NAME)
+	dbHost := os.Getenv(helpers.DB_HOST)
+	dbPort := os.Getenv(helpers.DB_PORT)
 
 	dbConnectionFormat := "%s:%s@%s(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local"
 	dbSourceName := fmt.Sprintf(dbConnectionFormat, dbUsername, dbPassword, dbProtocol, dbHost, dbPort, dbName)
@@ -50,7 +51,7 @@ func ModelForDbOperations(db *gorm.DB, model any) *gorm.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if db.Model(&model).Error != nil {
+	if err = db.Model(&model).Error; err != nil {
 		log.Fatal(err)
 	}
 	return db
