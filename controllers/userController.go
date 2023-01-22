@@ -10,6 +10,7 @@ import (
 	"github.com/VILJkid/golang-jwt-project/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 )
 
 var userModel = database.ModelForDbOperations(database.DB, models.User{})
@@ -67,6 +68,26 @@ func Signup() gin.HandlerFunc {
 			})
 			return
 		}
+
+		*user.User_id = uuid.New().String()
+		token, refreshToken, err := helpers.GenerateAllTokens(*user.Email, *user.First_name, *user.Last_name, *user.User_type, *user.User_id)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+		}
+
+		user.Token = &token
+		user.Refresh_token = &refreshToken
+
+		if err := userModel.WithContext(c).Create(&user).Error; err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, user)
 	}
 }
 

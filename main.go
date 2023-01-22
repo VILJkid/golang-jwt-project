@@ -3,13 +3,12 @@ package main
 import (
 	"os"
 
-	helper "github.com/VILJkid/golang-jwt-project/helpers"
 	"github.com/VILJkid/golang-jwt-project/routes"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	serverPort, isPortSet := os.LookupEnv(helper.SERVER_PORT)
+	serverPort, isPortSet := os.LookupEnv("SERVER_PORT")
 	if !isPortSet {
 		serverPort = "8080"
 	}
