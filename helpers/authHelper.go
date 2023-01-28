@@ -17,7 +17,7 @@ func CheckUserType(ctx *gin.Context, role string) (err error) {
 
 func MatchUserTypeToUid(ctx *gin.Context, userId string) (err error) {
 	userType := ctx.GetString("user_type")
-	uid := ctx.GetString("uid")
+	uid := ctx.GetString("user_id")
 
 	if userType == "USER" && uid != userId {
 		err = errors.New("unauthorized to access this resource")
